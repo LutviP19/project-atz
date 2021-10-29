@@ -1,0 +1,27 @@
+/* Set a background image by replacing the URL below */
+body {
+  background: url('background.webp') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+  font-size: 88%;
+}
+.container, .navbar {
+  box-shadow: 0 4px 20px 0px rgb(0 0 0 / 14%), 0 7px 10px -5px rgb(156 39 176 / 40%);
+}
+.row {
+  background-color: #eee;
+  color: #3C4858;
+  margin-right: 0;
+  margin-left: 0;
+}
+.form-control, .btn {
+font-size: 88%;
+}
+.form-group {
+margin-bottom: 0.6rem;
+}
+.col-form-label {
+line-height: 0.8;
+}

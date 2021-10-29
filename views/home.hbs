@@ -1,0 +1,444 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+    crossorigin="anonymous">
+<link href="https://s3-us-west-2.amazonaws.com/colors-css/2.2.0/colors.min.css" rel="stylesheet">
+<link href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/stylesheets/custom.css">
+
+<div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;" role="alert">
+    <h1>{{title}}</h1>
+    <p>Welcome to {{title}}</p>
+    <h5>Content List</h5>
+
+    <!-- Position it -->
+    <div style="position: absolute; top: 0; right: 0;">
+        <div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="10000">
+            <div class="toast-header bg-primary text-white">
+                <img src="/stylesheets/fav-logo-v3.png" width="20" class="rounded mr-2" alt="logo">
+                <strong class="mr-auto">Atz</strong>
+                <small class="span-info">Just now</small>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body bg-light text-dark">
+                Hello, welcome back! Let's make it better.
+            </div>
+        </div>
+        <div class="toast" id="toast-danger" role="alert" aria-live="assertive" aria-atomic="true" data-delay="10000">
+            <div class="toast-header bg-danger text-white">
+                <img src="/stylesheets/fav-logo-v3.png" width="20" class="rounded mr-2" alt="logo">
+                <strong class="mr-auto">Alert</strong>
+                <small class="span-info">Just now</small>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body bg-warning text-dark">
+                Please select item first.!
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="text-small">
+                <span class="badge badge-pill badge-success bg-green">promo</span>
+                <span class="badge badge-pill badge-primary bg-blue">special</span>
+                <span class="badge badge-pill badge-warning bg-orange">best</span>
+                <span class="badge badge-pill badge-warning bg-yellow">breed</span>
+                <span class="badge badge-pill badge-danger bg-red">junior</span>
+                <span class="badge badge-pill badge-light">default</span>
+            </div>
+            <div id="toolbar">
+                <button id="buttonView" class="btn btn-info bg-purple">
+                    <i class="fa fa-eye"></i> View data</button>
+                <button id="buttonAdd" class="btn btn-warning bg-orange">
+                    <i class="fa fa-plus"></i> Add data</button>
+                <button id="buttonDel" class="btn btn-danger bg-red">
+                    <i class="fa fa-trash"></i> Delete data</button>
+                <button id="buttonHide" class="btn btn-warning">
+                    <i class="fa fa-eye-slash"></i> Hide Selection</button>
+                <button id="buttonRefresh" class="btn btn-primary">
+                    <i class="fa fa-sync"></i> Refresh</button>
+            </div>
+            <table id="table"
+            data-toggle="table"
+            data-show-print="true"
+            data-show-refresh="true"
+            data-toolbar="#toolbar"
+            data-height="650"
+            data-ajax="ajaxRequest"
+            data-search="true"
+            data-search="true"
+            data-single-select="true"
+            data-click-to-select="true"
+            data-side-pagination="client"
+            data-pagination="true"
+            data-page-size="25"
+            data-row-style="rowStyle">
+                <thead>
+                    <tr>
+                        <th data-field="state" data-checkbox="true"></th>
+                        <th data-field="id" data-visible="false" data-searchable="false">ID</th>
+                        <th data-field="itemCode" data-width="100" data-sortable="true">Item Code</th>
+                        <th data-field="contentName">Content Name</th>
+                        <th data-field="label">Label</th>
+                        <th data-field="roleItem" data-sortable="true">Role</th>
+                        <th data-field="isActive" data-formatter="isActiveFormatter" data-width="100" data-sortable="true">Is Active</th>
+                        <th data-field="description" data-visible="false" data-searchable="false">Description</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="formModalLabel">Data Content: </h6>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <figure class="figure">
+                            <img id="privImg" src="/stylesheets/fav-logo-v3.png" width="250" class="figure-img img-fluid rounded" alt="...">
+                            <figcaption class="figure-caption text-center text-small text-info">
+                                <small id="actUrl">A action url not set.</small>
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <form id="frmContent" autocomplete="off">
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isActive" value="true">
+                                <label class="form-check-label" for="isActive">
+                                    Is Active
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemCode" class="col-form-label">Item Code:</label>
+                            <input type="hidden" class="form-control" id="itemId" name="id" value="">
+                            <input type="text" class="form-control" id="itemCode" name="itemCode">
+                        </div>
+                        <div class="form-group">
+                            <label for="roleItem">Role</label>
+                            <select class="form-control" id="roleItem" name="roleItem">
+                                <option value="default">default</option>
+                                <option value="promo">promo</option>
+                                <option value="special">special</option>
+                                <option value="best">best</option>
+                                <option value="breed">breed</option>
+                                <option value="junior">junior</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contentName" class="col-form-label">Content Name:</label>
+                            <input type="text" class="form-control" id="contentName" name="contentName">
+                        </div>
+                        <div class="form-group">
+                            <label for="label" class="col-form-label">Label:</label>
+                            <input type="text" class="form-control" id="label" name="label">
+                        </div>
+                        <div class="form-group">
+                            <label for="label" class="col-form-label">Photo Url:</label>
+                            <input type="text" class="form-control" id="urlPhoto" name="urlPhoto">
+                        </div>
+                        <div class="form-group">
+                            <label for="label" class="col-form-label">Action Url:</label>
+                            <input type="text" class="form-control" id="urlAction" name="urlAction">
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" rows="5" id="description" name="description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnAdd">Submit</button>
+                    <button type="button" class="btn btn-primary" id="btnUp">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-sm" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h6 class="modal-title" id="confirmModalLabel">Confirm Delete</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body bg-light text-dark">
+                    <form id="frmDel">
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" id="itemDelId" name="id" value="">
+                        </div>
+                    </form>
+                    <div id="pConfirm">
+                        <p>Confirm to delete.</p>
+                    </div>
+                </div>
+                <div class="modal-footer bg-warning text-dark">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="btnDel">Delete Content</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/print/bootstrap-table-print.min.js"></script>
+
+<script>
+    $(function () {
+        initPage();
+
+        $('#formModal').on('hidden.bs.modal', function () {
+            $('#itemId,#itemCode,#contentName,#label,#description').val('')
+            $('#roleItem').val('default')
+            $('#isActive').prop('checked', false)
+            document.getElementById("frmContent").reset();
+            $('#privImg').hide();
+            $('#actUrl').hide();
+        })
+
+        $('#confirmModal').on('hidden.bs.modal', function () {
+            $('#itemId').val('')
+            document.getElementById("frmDel").reset();
+        })
+
+        $('#buttonView').click(function () {
+            var data = $('#table').bootstrapTable('getSelections');
+            if (data.length > 0) {
+                $('#btnAdd').hide()
+                $('#btnUp').show()
+                viewData(data)
+            } else {
+                var body = 'Please select item first.!';
+                var info = 'Just now';
+                showToastAlert(body, info)
+            }
+        })
+
+        $('#buttonAdd').click(function () {
+            $('#btnAdd').show()
+            $('#btnUp').hide()
+            $('#formModal').find('.modal-title').text('Add new data')
+            $('#formModal').modal('show')
+        })
+
+        $('#buttonDel').click(function () {
+            var data = $('#table').bootstrapTable('getSelections');
+            if (data.length > 0) {
+                var itemId = data[0].id;
+                $('#itemDelId').val(itemId)
+                $('#pConfirm').html('<p class="text-danger text-small">Confirm to delete Item Code:<br><b>"' + data[0].itemCode + '"</b><br>This action cannot undo!</p>');
+                $('#confirmModal').modal('show')
+            } else {
+                var body = 'Please select item first.!';
+                var info = 'Just now';
+                showToastAlert(body, info)
+            }
+
+        })
+
+        $('#buttonHide').click(function () {
+            var ids = $.map($('#table').bootstrapTable('getSelections'), function (row) {
+                return row.id
+            })
+            //console.log(ids);
+
+            if (ids.length > 0) {
+                $('#table').bootstrapTable('remove', {
+                    field: 'id',
+                    values: ids
+                })
+            } else {
+                var body = 'Please select item first.!';
+                var info = 'Just now';
+                showToastAlert(body, info);
+            }
+        })
+
+        $('#buttonRefresh').click(function () {
+            $('#table').bootstrapTable('refresh')
+        })
+
+        // Button Modal(btn*)
+        $('#btnAdd').click(function () {
+            ajaxAdd()
+        })
+
+        $('#btnUp').click(function () {
+            ajaxUp()
+        })
+
+        $('#btnDel').click(function () {
+            ajaxDel()
+        })
+    })
+
+    function initPage() {
+        $('#toast').toast('show');
+        $('#privImg').hide();
+        $('#actUrl').hide();
+    }
+
+    function ajaxAdd() {
+        var url = '/content';
+        var is_active = $('#isActive').prop('checked') ? 1 : 0;
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: $('#frmContent').serialize() + '&isActive=' + is_active,
+            success: function (data) {
+                $('#formModal').modal('hide')
+                $('#table').bootstrapTable('refresh')
+
+                var body = 'Data inserted successfully!';
+                var info = 'Just now';
+                showToastInfo(body, info)
+            }
+        })
+    }
+
+    function ajaxUp() {
+        var itemId = $('#itemId').val();
+        var url = '/content/' + itemId;
+        var is_active = $('#isActive').prop('checked') ? 1 : 0;
+        $.ajax({
+            type: "Patch",
+            url: url,
+            data: $('#frmContent').serialize() + '&isActive=' + is_active,
+            success: function (data) {
+                $('#formModal').modal('hide')
+                $('#table').bootstrapTable('refresh')
+
+                var body = 'Data updated successfully!';
+                var info = 'Just now';
+                showToastInfo(body, info)
+            }
+        })
+    }
+
+    function ajaxDel() {
+        var itemId = $('#itemDelId').val()
+        var url = '/content/' + itemId;
+        $.ajax({
+            type: "Delete",
+            url: url,
+            data: $('#frmDel').serialize(),
+            success: function (data) {
+                $('#confirmModal').modal('hide')
+                $('#table').bootstrapTable('refresh')
+
+                var body = 'Data deleted successfully!';
+                var info = 'Just now';
+                showToastInfo(body, info)
+            }
+        })
+    }
+
+    function showToastInfo(body, info) {
+        $('#toast').toast('show')
+        $('#toast .toast-body').text(body)
+        $('#toast .span-info').text(info)
+    }
+
+    function showToastAlert(body, info) {
+        $('#toast-danger').toast('show')
+        $('#toast-danger .toast-body').text(body)
+        $('#toast-danger .span-info').text(info)
+    }
+
+    function viewData(data) {
+        $('#formModal').find('.modal-title').text('Data user: ' + '[' + data[0].id + '] ' + data[0].contentName)
+        $('#itemId').val(data[0].id)
+        $('#isActive').prop('checked', data[0].isActive)
+        $('#itemCode').val(data[0].itemCode)
+        $('#contentName').val(data[0].contentName)
+        $('#label').val(data[0].label)
+        $('#urlPhoto').val(data[0].urlPhoto)
+        $('#urlAction').val(data[0].urlAction)
+        $('#description').val(data[0].description)
+        $('#roleItem').val(data[0].roleItem)
+
+        $('#privImg').show();
+        $('#actUrl').show();
+        if (data[0].urlPhoto != null && data[0].urlAction != null) {
+            $('#privImg').attr('src', data[0].urlPhoto);
+            $('#actUrl').text(data[0].urlAction);
+        } else {
+            $('#privImg').attr('src', '/stylesheets/fav-logo-v3.png');
+            $('#actUrl').text('A action url not set.');
+        }
+
+        $('#formModal').modal('show')
+    }
+
+    function ajaxRequest(params) {
+        var url = '/content/'
+        $.get(url + '?' + $.param(params.data)).then(function (res) {
+            params.success(res)
+        })
+    }
+
+    function isActiveFormatter(value, row) {
+        var icon = value === 1 ? 'fa-star' : 'fa-star-and-crescent'
+        var text = value === 1 ? 'Active' : 'Hidden'
+        return '<i class="fa ' + icon + '"></i> ' + text
+    }
+
+    function rowStyle(row, index) {
+        var classes = [
+            'bg-green',
+            'bg-blue',
+            'bg-orange',
+            'bg-yellow',
+            'bg-red'
+        ]
+
+        if (row.roleItem === 'promo') {
+            return {
+                classes: classes[0]
+            }
+        }
+        if (row.roleItem === 'special') {
+            return {
+                classes: classes[1]
+            }
+        }
+        if (row.roleItem === 'best') {
+            return {
+                classes: classes[2]
+            }
+        }
+        if (row.roleItem === 'breed') {
+            return {
+                classes: classes[3]
+            }
+        }
+        if (row.roleItem === 'junior') {
+            return {
+                classes: classes[4]
+            }
+        }
+
+        return {
+            css: {
+                color: 'blue'
+            }
+        }
+    }
+</script>
